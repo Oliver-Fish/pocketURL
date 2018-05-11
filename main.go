@@ -21,12 +21,6 @@ type pocketURL struct {
 	Created time.Time
 }
 
-/*
-Todo:
-	*Tests
-	*Impliment SQLLite
-*/
-
 var pocketURLS = map[string]pocketURL{}
 
 func main() {
@@ -55,7 +49,7 @@ func addURL(w http.ResponseWriter, req *http.Request) {
 			Success: false,
 			Msg:     "URL Missing from request",
 		}
-		writeOutputJson(w, resp)
+		writeOutputJSON(w, resp)
 		return
 	}
 	url := arg[0]
@@ -65,7 +59,7 @@ func addURL(w http.ResponseWriter, req *http.Request) {
 			Success: false,
 			Msg:     "Unable to get requested url",
 		}
-		writeOutputJson(w, resp)
+		writeOutputJSON(w, resp)
 		return
 	}
 	pURL := checkURL(url)
@@ -74,7 +68,7 @@ func addURL(w http.ResponseWriter, req *http.Request) {
 			PocketURL: pURL,
 			Success:   true,
 		}
-		writeOutputJson(w, resp)
+		writeOutputJSON(w, resp)
 		return
 	}
 	var genURL string
@@ -90,7 +84,7 @@ func addURL(w http.ResponseWriter, req *http.Request) {
 		PocketURL: genURL,
 		Success:   true,
 	}
-	writeOutputJson(w, resp) //Send Response to client
+	writeOutputJSON(w, resp) //Send Response to client
 }
 
 func removeURL(w http.ResponseWriter, req *http.Request) {
@@ -102,7 +96,7 @@ func removeURL(w http.ResponseWriter, req *http.Request) {
 			Msg:     "Expected purl or url got both",
 			Success: false,
 		}
-		writeOutputJson(w, resp)
+		writeOutputJSON(w, resp)
 		return
 	}
 	if p { //pURL has been set
@@ -115,14 +109,14 @@ func removeURL(w http.ResponseWriter, req *http.Request) {
 				Msg:       "",
 				Success:   true,
 			}
-			writeOutputJson(w, resp)
+			writeOutputJSON(w, resp)
 			return
 		}
 		resp = response{ //pURL not found
 			Msg:     "Pocket URL not found",
 			Success: false,
 		}
-		writeOutputJson(w, resp)
+		writeOutputJSON(w, resp)
 		return
 	} else if u {
 		url := fURL[0]
@@ -133,14 +127,14 @@ func removeURL(w http.ResponseWriter, req *http.Request) {
 				PocketURL: pURLValue,
 				Success:   true,
 			}
-			writeOutputJson(w, resp)
+			writeOutputJSON(w, resp)
 			return
 		}
 		resp = response{ //URL not found
 			Msg:     "URL not found",
 			Success: false,
 		}
-		writeOutputJson(w, resp)
+		writeOutputJSON(w, resp)
 		return
 	}
 }
@@ -161,7 +155,7 @@ func checkURL(url string) string {
 	return "" //Return an empty string because not found
 }
 
-func writeOutputJson(w http.ResponseWriter, s interface{}) {
+func writeOutputJSON(w http.ResponseWriter, s interface{}) {
 	dat, err := json.Marshal(&s)
 	if err != nil {
 		w.Write(dat)
